@@ -1,6 +1,6 @@
 # DL4 PrecipMet Parser
 
-`dl4_PrecipMet_20260824.pl` converts binary data from DL4-PrecipMet firmware v1.0.0 into minute-resolution CSV data.
+`dl4_PrecipMet.pl` converts binary data from DL4-PrecipMet firmware v1.0.0 into minute-resolution CSV data.
 
 ## Requirements
 
@@ -34,7 +34,7 @@ Lines beginning with `#` may be used as comments, but the script expects every d
 Run the script from the directory containing `inst_loc`:
 
 ```bash
-perl /path/to/dl4_PrecipMet_20260824.pl DL4-0109 DL4-PrecipMet_I0109_SD109_2025-11-03.bin
+perl /path/to/dl4_PrecipMet.pl DL4-0109 DL4-PrecipMet_I0109_SD109_2025-11-03.bin
 ```
 
 Options:
@@ -47,7 +47,7 @@ Options:
 For example:
 
 ```bash
-perl /path/to/dl4_PrecipMet_20260824.pl -d DL4-0109 DL4-PrecipMet_I0109_SD109_2025-11-03.bin
+perl /path/to/dl4_PrecipMet.pl -d DL4-0109 DL4-PrecipMet_I0109_SD109_2025-11-03.bin
 ```
 
 ## Output
