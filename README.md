@@ -59,6 +59,36 @@ The script writes the following files to its current directory:
 
 For the example `inst_loc` entry, the CSV is `del_mar_01m_raw.csv`.
 
+## MATLAB Plotting
+
+The MATLAB scripts are in [matlab](matlab). The main plotting entry point is `plotPrecipMet.m`.
+
+Add the `matlab` directory to the MATLAB path, then either run it interactively or pass a CSV filename:
+
+```matlab
+addpath('path/to/DL4-PrecipMet/matlab')
+plotPrecipMet
+plotPrecipMet('del_mar_01m_raw.csv')
+```
+
+`plotPrecipMet.m` loads DL4 PrecipMet CSV or MAT data and creates a three-panel figure with cumulative precipitation, per-minute precipitation, and battery voltage. The plot axes share a time range, update the displayed date range after zooming or panning, and provide data-cursor values.
+
+Supporting scripts:
+
+- `loadcsv.m`: reads the parser CSV output into a UTC MATLAB timetable and adds site metadata from the CSV header. It can also save the loaded timetable as a MAT file.
+- `customDataTip.m`: formats data-cursor values with timestamp, data index, and y-value.
+- `enableDynamicTimeTitle.m`: installs the zoom/pan-aware time-range title on the top plot tile. The file currently defines `enableDynamicTimeTitleTopTile`; rename that function to `enableDynamicTimeTitle` or update the call in `plotPrecipMet.m` before using this helper.
+
 ## Binary File Handling
 
 The parser skips consecutive 512-byte blocks containing only `0xFF` bytes at the beginning of a binary file before reading the first record header. It also skips records whose header timestamp is outside the deployment and recovery window in `inst_loc`, then continues scanning later records.
+
+## License
+
+This software is Copyright © 2026 The Regents of the University of California. All Rights Reserved.
+
+## Contact & Support
+
+For issues or questions:
+- Check usage section above
+- Contact: Douglas Alden
