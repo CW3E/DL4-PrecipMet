@@ -14,6 +14,8 @@ The `inst_loc` fields are whitespace-delimited:
 DL4-0109 del_mar_01 rR3 20 39.244842 -123.021849 20171109010600 20300520204700 1 Del_Mar
 ```
 
+The script searches `inst_loc` for a line whose first field matches the instrument ID passed on the command line, such as `DL4-0109`. If no matching line is found, it exits with `Cannot find data for release DL4-XXXX` and does not process the binary file.
+
 | Field | Name | Description |
 | --- | --- | --- |
 | 0 | Sensor number | Instrument ID supplied as the first argument to the processing script. |
@@ -82,6 +84,8 @@ Supporting scripts:
 ## Binary File Handling
 
 The parser skips consecutive 512-byte blocks containing only `0xFF` bytes at the beginning of a binary file before reading the first record header. It also skips records whose header timestamp is outside the deployment and recovery window in `inst_loc`, then continues scanning later records.
+
+Before processing data, the parser compares the instrument number in the selected `inst_loc` entry with the instrument number decoded from the first binary header. If they differ, the script displays a warning and asks whether to continue. Answer `y` or `yes` to continue; pressing Enter, answering anything else, or reaching end of input stops processing. This check helps ensure that the recovered binary data is being processed with the `inst_loc` entry for the correct site location.
 
 ## License
 

@@ -73,6 +73,9 @@ print FILE_NAME . "\nProcessing $ARGV[1] @DEBUG\n\n";
 
 $ARGV[0] = uc $ARGV[0];  # convert to upper case
 
+($expectedInstNum) = $ARGV[0] =~ /^DL4-(\d{4})$/;
+die "Instrument number must use the format DL4-XXXX\n" unless defined $expectedInstNum;
+
 ($siteNum, $siteName, $filename, $sensors, $stationElev, $latitude, $longitude, $startTime, $endTime) = readReleaseInf( $ARGV[0] );
 @sensor = split(/ */,$sensors);
 
@@ -82,6 +85,7 @@ $sensorFlag = SensorFlags(@sensor, $sensorFlag);
 
 my $recordNumber = 0;
 my $firstHeaderRead = 0;
+my $instrumentNumberChecked = 0;
 my $countOfBlankRecords = 0;   # used to confirm we have not just hit a gap in the file
 my $precip0_last = 0;              # precip0 total for previous minute
 my $precip1_last = 0;              # precip1 total for previous minute
@@ -220,6 +224,18 @@ while (seek(BINFILE, $recordNumber * $RECORDSIZE + $blank512, 0) && $stopProcess
       else { $chkSum = 'BAD'; }
       
       $headerTimeStamp = timegm($Sc,$Mn,$Hour,$Dy,$Mo-1,$Yr-1900);
+
+      if (!$instrumentNumberChecked)
+      {
+        $instrumentNumberChecked = 1;
+        if ($instNum != $expectedInstNum)
+        {
+          printf "WARNING: inst_loc instrument number $ARGV[0] does not match header instrument number DL4-%04d.\n", $instNum;
+          print "Continue processing? [y/N] ";
+          my $response = <STDIN>;
+          die "Processing stopped by user\n" unless defined $response && $response =~ /^\s*y(?:es)?\s*$/i;
+        }
+      }
 
       # Ignore records with a header outside this deployment's time window.
       next if ($headerTimeStamp < $startTime || $headerTimeStamp > $endTime);
